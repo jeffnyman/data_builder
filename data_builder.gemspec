@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Provides expressive data set handling from YAML files.}
   spec.description   = %q{Provides expressive data set handling from YAML files.}
-  spec.homepage      = "https://github.com/jnyman/data_builder"
+  spec.homepage      = "https://github.com/jeffnyman/data_builder"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|

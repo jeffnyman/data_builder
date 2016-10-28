@@ -1,7 +1,7 @@
 # DataBuilder
 
 [![Gem Version](https://badge.fury.io/rb/data_builder.svg)](http://badge.fury.io/rb/data_builder)
-[![License](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/jnyman/data_builder/blob/master/LICENSE.txt)
+[![License](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/jeffnyman/data_builder/blob/master/LICENSE.txt)
 
 [![Dependency Status](https://gemnasium.com/jnyman/data_builder.png)](https://gemnasium.com/jnyman/data_builder)
 
@@ -25,7 +25,7 @@ You can also install DataBuilder just as you would any other gem:
 
 ## Usage
 
-DataBuilder is using my [DataReader gem](https://github.com/jnyman/data_reader) to provide base-level functionality. Unlike DataReader, DataBuilder will assume some defaults. For example, you could do something as simple as this:
+DataBuilder is using my [DataReader gem](https://github.com/jeffnyman/data_reader) to provide base-level functionality. Unlike DataReader, DataBuilder will assume some defaults. For example, you could do something as simple as this:
 
 ```ruby
 require "data_builder"
@@ -142,7 +142,7 @@ After checking out the repo, run `bin/setup` to install dependencies. Then, run 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at [https://github.com/jnyman/data_builder](https://github.com/jnyman/data_builder). The testing ecosystem of Ruby is very large and this project is intended to be a welcoming arena for collaboration on yet another testing tool. As such, contributors are very much welcome but are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at [https://github.com/jeffnyman/data_builder](https://github.com/jeffnyman/data_builder). The testing ecosystem of Ruby is very large and this project is intended to be a welcoming arena for collaboration on yet another testing tool. As such, contributors are very much welcome but are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 To contribute to DataBuilder:
 
@@ -162,5 +162,5 @@ This code is loosely based upon the [DataMagic](https://github.com/cheezy/data_m
 
 ## License
 
-DataReader is distributed under the [MIT](http://www.opensource.org/licenses/MIT) license.
-See the [LICENSE](https://github.com/jnyman/data_builder/blob/master/LICENSE.txt) file for details.
+DataBuilder is distributed under the [MIT](http://www.opensource.org/licenses/MIT) license.
+See the [LICENSE](https://github.com/jeffnyman/data_builder/blob/master/LICENSE.txt) file for details.
