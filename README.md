@@ -25,25 +25,48 @@ You can also install DataBuilder just as you would any other gem:
 
 ## Usage
 
-DataBuilder is using my [DataReader gem](https://github.com/jeffnyman/data_reader) to provide base-level functionality. Unlike DataReader, DataBuilder will assume some defaults. For example, you could do something as simple as this:
+DataBuilder is using my [DataReader gem](https://github.com/jeffnyman/data_reader) to provide base-level functionality. Unlike DataReader, DataBuilder will assume some defaults.
+
+### Loading with Default Path
+
+Consider the following file and directory setup:
+
+```
+project_dir\
+  config\
+    config.yml
+
+  data\
+    stars.yml
+
+  env\
+    environments.yml
+
+  example-data-builder.rb
+```
+
+All the code shown below would go in the `example-data-builder` file.
+
+With the above class in place and the above directory structure, you could do something as simple as this:
 
 ```ruby
 require "data_builder"
 
-data = DataBuilder.load 'default.yml'
+data = DataBuilder.load 'stars.yml'
 
 puts data
 ```
 
-Here I'm relying on the fact that DataBuilder applies a default directory of `data`. I then use the `load` method of DataReader to call up a file in that directory. I could set my own data path with DataBuilder as such:
+Here I'm relying on the fact that DataBuilder applies a default directory of `data`. I then use the `load` method of DataReader to call up a file in that directory.
+
+### Loading with Specified Path
+
+You can set a specific data path with DataBuilder as such:
 
 ```ruby
 require "data_builder"
 
-DataBuilder.data_path = 'config/data'
-data = DataBuilder.load 'default.yml'
-
-puts data
+DataBuilder.data_path = 'env'
 ```
 
 Here you can inform DataBuilder where it can find the data files using `data_path`. As you've seen, if you don't specify a directory then DataBuilder will default to using a directory named `data`.
@@ -51,10 +74,16 @@ Here you can inform DataBuilder where it can find the data files using `data_pat
 After setting the directory you must load a file. This can be accomplished by calling the `load` method.
 
 ```ruby
-DataBuilder.load 'default.yml'
+data = DataBuilder.load 'environments.yml'
+
+puts data
 ```
 
-However, these approaches are really just using DataBuilder as an overlay for DataReader.
+Here the `data` variable would contain the contents of the `environments.yml` file.
+
+However, everything said so far is really just using DataBuilder as an overlay for DataReader.
+
+### Data About
 
 Where DataBuilder steps in is when you want to use the data. DataBuilder provides a `data_about` method that will return the data for a specific key from any data files that have been loaded.
 
@@ -72,9 +101,9 @@ epsilon eridani:
   distance: 10.5
 ```
 
-Now let's use DataBuilder to get the information from it.
+Now let's use DataBuilder to get the information from it. You can extend or include DataBuilder as part of another class.
 
-### Extending DataBuilder
+#### Extending DataBuilder
 
 ```ruby
 class Testing
@@ -84,7 +113,7 @@ end
 data = Testing.data_about('alpha centauri')
 ```
 
-### Including DataBuilder
+#### Including DataBuilder
 
 ```ruby
 class Testing
@@ -97,9 +126,9 @@ data = testing.data_about('alpha centauri')
 
 ### The Data Key
 
-In both cases of extending or including, I'm using a variable to store the results of the call. Those results will be the data pulled from the `default.yml` file. Of note, however, is that all that will be pulled is the data from the "alpha centauri" key because that is what you specified in the call to `data_about`.
+In both cases of extending or including, I'm using a variable to store the results of the call. Those results will be the data pulled from the `default.yml` file. Of note, however, is all that will be pulled is the data from the "alpha centauri" key because that is what you specified in the call to `data_about`.
 
-In these examples, I'm using a string because the value "alpha centauri" has a space in it. However, if that was not the case -- if the key were, say, alpha_centauri -- then you could use a symbol instead, like this:
+Those examples show `data_about` being passed a string and the reason for that is because the value "alpha centauri" has a space in it. However, if that was not the case -- if the key were, say, "alpha_centauri" -- then you could use a symbol instead, like this:
 
 ```ruby
 data = testing.data_about(:alpha_centauri)
@@ -107,15 +136,15 @@ data = testing.data_about(:alpha_centauri)
 
 ### Default Files
 
-You might wonder how DataBuilder knew to look for `default.yml` since I didn't use a `load` method in these examples. If you do not specify a filename the logic will attempt to use a file named `default.yml` in the data path you have specified or in the default path of `data`.
+You might wonder how DataBuilder knew to look for `default.yml` since I didn't use a `load` method in these examples. If you do not specify a filename the logic will attempt to use a file named `default.yml` in the specific data path you have specified or in the default path of `data`.
  
-Another option is that you can set an environment variable called DATA_BUILDER_SOURCE. When this variable exists and is set, the value it is set to will be used instead of the `default.yml` file. Keep in mind that the "data source" here refers to the file, not the keys within a file.
+Another option is that you can set an environment variable called `DATA_BUILDER_SOURCE`. When this variable exists and is set, the value it is set to will be used instead of the `default.yml` file. Keep in mind that the "data source" here refers to the file, not the keys within a file.
 
 ### Namespaced Data
 
 To organize your data into a rough equivalent of namespaces, and to load that data accordingly, you can do something like this:
 
-```
+```ruby
 class Testing
   include DataBuilder
 end
@@ -125,7 +154,7 @@ testing = Testing.new
 data = testing.data_about('stars/epsilon eridani')
 ```
 
-When DataBuilder sees this kind of construct, it will take the first part (before the /) as a filename and the second part as the key to look up in that file. So the above command would look for a file called `stars.yml` in the data path provided and then grab the data from the key entry labeled "epislon eridani".
+When DataBuilder sees this kind of construct, it will take the first part (before the /) as a filename and the second part as the key to look up in that file. So the above command would look for a file called `stars.yml` in the data path provided (in this case, the default of `data`) and then grab the data from the key entry labeled "epislon eridani".
 
 ### Aliases
 
@@ -135,6 +164,8 @@ Given the examples, you can see that `data_about` was chosen as the method name 
 * `data_for`
 * `using_data_for`
 * `using_data_from`
+
+The reason for these aliases is, again, to make the logic expressive about its intent. This is particularly nice if you fit DataBuilder in with the context of a fluent API.
 
 ## Development
 
