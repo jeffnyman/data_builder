@@ -8,6 +8,7 @@ RSpec.describe DataBuilder do
   it "has a version number" do
     expect(DataBuilder::VERSION).not_to be nil
   end
+
   context "when configuring the data path" do
     before(:each) do
       DataBuilder.data_path = nil
@@ -24,15 +25,22 @@ RSpec.describe DataBuilder do
   end
 
   context "when reading data files" do
+    it "defaults to reading from a data directory" do
+      DataBuilder.data_path = nil
+      DataBuilder.load("account.yml")
+      data = TestPage.new.data_for "test"
+      expect(data.keys.sort).to eq(['name','owner'])
+    end
+
     it "defaults to reading a file named default.yml" do
-      DataBuilder.data_path = File.expand_path('config/data', File.dirname(__FILE__))
+      DataBuilder.data_path = 'data'
       DataBuilder.data_source = nil
       data = TestPage.new.data_about :test
       expect(data.keys).to include "data_01"
     end
 
     it "recognizes data builder environment variable" do
-      DataBuilder.data_path = File.expand_path('config/data', File.dirname(__FILE__))
+      DataBuilder.data_path = 'data'
       DataBuilder.data_source = nil
       ENV['DATA_BUILDER_SOURCE'] = 'account.yml'
       data = TestPage.new.data_about "test"
@@ -40,9 +48,22 @@ RSpec.describe DataBuilder do
       ENV['DATA_BUILDER_SOURCE'] = nil
     end
 
+    it "merges specified data to a key" do
+      DataBuilder.data_path = 'data'
+      data = TestPage.new.data_for 'account/test', {'name' => 'TStories'}
+      expect(data['name']).to eq('TStories')
+    end
+
+    it "merges specified data to a hash" do
+      DataBuilder.data_path = 'data'
+      data = TestPage.new.data_for 'account/test', { 'valid' => {'name' => 'TStories'} }
+      expect(data['name']).to eq('TesterStories')
+      expect(data['valid']).to eq({"name"=>"TStories"})
+    end
+
     context 'namespaces' do
       it "retrieves data from the correct data file" do
-        DataBuilder.data_path = File.expand_path('config/data', File.dirname(__FILE__))
+        DataBuilder.data_path = 'data'
         data = TestPage.new.data_about "account/test"
         expect(data.keys.sort).to eq(['name','owner'])
       end
