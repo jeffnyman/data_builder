@@ -33,9 +33,24 @@ module DataBuilder
   alias using_data_for data_about
   alias using_data_from data_about
 
+  def self.use_in_scenario(scenario, data_location = DataBuilder.data_path)
+    original_data_path = DataBuilder.data_path
+    DataBuilder.data_path = data_location
+    data_files = data_files_for(scenario)
+    DataBuilder.load("#{data_files.last}.yml") if data_files.count > 0
+    DataBuilder.data_path = original_data_path
+  end
+
   private
 
   def builder_source
     ENV['DATA_BUILDER_SOURCE'] ? ENV['DATA_BUILDER_SOURCE'] : 'default.yml'
+  end
+
+  def self.data_files_for(scenario)
+    tags = scenario.send(scenario.respond_to?(:tags) ? :tags : :source_tags)
+    tags.map(&:name).select { |t| t =~ /@databuilder_/ }.map do |t|
+      t.gsub('@databuilder_', '').to_sym
+    end
   end
 end

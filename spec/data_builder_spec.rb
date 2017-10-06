@@ -4,6 +4,23 @@ class TestPage
   include DataBuilder
 end
 
+class ScenarioMock
+  attr_accessor :tags
+
+  def initialize(tags)
+    @tags = tags
+  end
+end
+
+class TagMock
+  attr_reader :name, :line
+
+  def initialize(name, line)
+    @name = name
+    @line = line
+  end
+end
+
 RSpec.describe DataBuilder do
   it "has a version number" do
     expect(DataBuilder::VERSION).not_to be nil
@@ -56,7 +73,7 @@ RSpec.describe DataBuilder do
 
     it "merges specified data to a hash" do
       DataBuilder.data_path = 'data'
-      data = TestPage.new.data_for 'account/test', { 'valid' => {'name' => 'TStories'} }
+      data = TestPage.new.data_for 'account/test', {'valid' => {'name' => 'TStories'}}
       expect(data['name']).to eq('TesterStories')
       expect(data['valid']).to eq({"name"=>"TStories"})
     end
@@ -67,6 +84,38 @@ RSpec.describe DataBuilder do
         data = TestPage.new.data_about "account/test"
         expect(data.keys.sort).to eq(['name','owner'])
       end
+    end
+  end
+
+  context "when using data in a scenario context" do
+    it "loads the data for a scenario" do
+      DataBuilder.data_path = 'data'
+      scenario = ScenarioMock.new(
+        [TagMock.new('@tag', 1),
+         TagMock.new('@databuilder_account', 1)]
+      )
+      expect(DataBuilder).to receive(:load).with('account.yml')
+      DataBuilder.use_in_scenario(scenario)
+    end
+
+    it "uses the last data listed for a scenario if multiple exist" do
+      scenario = ScenarioMock.new(
+        [TagMock.new('@data_default', 1),
+         TagMock.new('@databuilder_account', 1)]
+      )
+      expect(DataBuilder).to receive(:load).with('account.yml')
+      DataBuilder.use_in_scenario(scenario)
+    end
+
+    it "allows data loading from a different location" do
+      DataBuilder.data_path = 'features'
+      scenario = ScenarioMock.new(
+        [TagMock.new('@tag', 1),
+         TagMock.new('@databuilder_account', 1)]
+      )
+      expect(DataBuilder).to receive(:load).with('account.yml')
+      DataBuilder.use_in_scenario(scenario, 'config/data')
+      expect(DataBuilder.data_path).to eq('features')
     end
   end
 end
