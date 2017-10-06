@@ -11,6 +11,13 @@ module DataBuilder
     def default_data_path
       'data'
     end
+
+    def data_files_for(scenario)
+      tags = scenario.send(scenario.respond_to?(:tags) ? :tags : :source_tags)
+      tags.map(&:name).select { |t| t =~ /@databuilder_/ }.map do |t|
+        t.gsub('@databuilder_', '').to_sym
+      end
+    end
   end
 
   def data_about(key, specified = {})
@@ -45,12 +52,5 @@ module DataBuilder
 
   def builder_source
     ENV['DATA_BUILDER_SOURCE'] ? ENV['DATA_BUILDER_SOURCE'] : 'default.yml'
-  end
-
-  def self.data_files_for(scenario)
-    tags = scenario.send(scenario.respond_to?(:tags) ? :tags : :source_tags)
-    tags.map(&:name).select { |t| t =~ /@databuilder_/ }.map do |t|
-      t.gsub('@databuilder_', '').to_sym
-    end
   end
 end
