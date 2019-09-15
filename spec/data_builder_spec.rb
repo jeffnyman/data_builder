@@ -44,6 +44,7 @@ RSpec.describe DataBuilder do
   context "when reading data files" do
     it "defaults to reading from a data directory" do
       DataBuilder.data_path = nil
+      expect(DataBuilder.data_path).to eq('data')
       DataBuilder.load("account.yml")
       data = TestPage.new.data_for "test"
       expect(data.keys.sort).to eq(['name','owner'])

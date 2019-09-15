@@ -177,6 +177,20 @@ Given the examples, you can see that `data_about` was chosen as the method name 
 
 The reason for these aliases is, again, to make the logic expressive about its intent. This is particularly nice if you fit DataBuilder in with the context of a fluent API.
 
+### Scenarios in Cucumber
+
+If you are using Cucumber, there is another to specify the data file to load. You can apply a _tag_ to a given scenario. The tag should take the form of `@databuilder_NAME` where `NAME` is replaced with the name of the data file you want to be loaded for the scenario.
+
+As an example, if you add the tag `@databuilder_stars` then the file `stars.yml` will be loaded. If you want to use the tags you have to add the following code in a hook:
+
+```ruby
+Before do |scenario|
+  DataBuilder.data_files_for(scenario)
+end
+```
+
+You can use `data_for_scenario` in place of `data_files_for` if you feel that reads better.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec:all` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

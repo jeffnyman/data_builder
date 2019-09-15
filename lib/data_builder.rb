@@ -18,6 +18,8 @@ module DataBuilder
         t.gsub('@databuilder_', '').to_sym
       end
     end
+
+    alias data_for_scenario data_files_for
   end
 
   def data_about(key, specified = {})
@@ -44,13 +46,13 @@ module DataBuilder
     original_data_path = DataBuilder.data_path
     DataBuilder.data_path = data_location
     data_files = data_files_for(scenario)
-    DataBuilder.load("#{data_files.last}.yml") if data_files.count > 0
+    DataBuilder.load("#{data_files.last}.yml") if data_files.count.positive?
     DataBuilder.data_path = original_data_path
   end
 
   private
 
   def builder_source
-    ENV['DATA_BUILDER_SOURCE'] ? ENV['DATA_BUILDER_SOURCE'] : 'default.yml'
+    ENV['DATA_BUILDER_SOURCE'] || 'default.yml'
   end
 end
