@@ -3,8 +3,6 @@
 [![Gem Version](https://badge.fury.io/rb/data_builder.svg)](http://badge.fury.io/rb/data_builder)
 [![License](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/jeffnyman/data_builder/blob/master/LICENSE.md)
 
-[![Dependency Status](https://gemnasium.com/jeffnyman/data_builder.png)](https://gemnasium.com/jeffnyman/data_builder)
-
 The goal of DataBuilder is to apply an expressive means of constructing a data set based on information stored in YAML files.
 
 ## Installation
