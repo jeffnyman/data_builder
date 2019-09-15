@@ -1,7 +1,7 @@
 # DataBuilder
 
 [![Gem Version](https://badge.fury.io/rb/data_builder.svg)](http://badge.fury.io/rb/data_builder)
-[![License](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/jeffnyman/data_builder/blob/master/LICENSE.txt)
+[![License](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/jeffnyman/data_builder/blob/master/LICENSE.md)
 
 [![Dependency Status](https://gemnasium.com/jeffnyman/data_builder.png)](https://gemnasium.com/jeffnyman/data_builder)
 
@@ -15,13 +15,23 @@ To get the latest stable release, add this line to your application's Gemfile:
 gem 'data_builder'
 ```
 
-And then include it in your bundle:
+To get the latest code:
 
-    $ bundle
+```ruby
+gem 'data_reader', git: 'https://github.com/jeffnyman/data_builder'
+```
+
+After doing one of the above, execute the following command:
+
+```
+$ bundle
+```
 
 You can also install DataBuilder just as you would any other gem:
 
-    $ gem install data_builder
+```
+$ gem install data_builder
+```
 
 ## Usage
 
@@ -137,7 +147,7 @@ data = testing.data_about(:alpha_centauri)
 ### Default Files
 
 You might wonder how DataBuilder knew to look for `default.yml` since I didn't use a `load` method in these examples. If you do not specify a filename the logic will attempt to use a file named `default.yml` in the specific data path you have specified or in the default path of `data`.
- 
+
 Another option is that you can set an environment variable called `DATA_BUILDER_SOURCE`. When this variable exists and is set, the value it is set to will be used instead of the `default.yml` file. Keep in mind that the "data source" here refers to the file, not the keys within a file.
 
 ### Namespaced Data
@@ -169,7 +179,11 @@ The reason for these aliases is, again, to make the logic expressive about its i
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec:all` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment. To install this gem onto your local machine, run `bundle exec rake install`.
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec:all` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+
+The default `rake` command will run all tests as well as a RuboCop analysis.
+
+To install this gem onto your local machine, run `bundle exec rake install`.
 
 ## Contributing
 
@@ -194,4 +208,4 @@ This code is loosely based upon the [DataMagic](https://github.com/cheezy/data_m
 ## License
 
 DataBuilder is distributed under the [MIT](http://www.opensource.org/licenses/MIT) license.
-See the [LICENSE](https://github.com/jeffnyman/data_builder/blob/master/LICENSE.txt) file for details.
+See the [LICENSE](https://github.com/jeffnyman/data_builder/blob/master/LICENSE.md) file for details.
