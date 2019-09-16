@@ -63,3 +63,6 @@ Metrics/ParameterLists:
 
 Metrics/AbcSize:
   Max: 18
+
+Metrics/ModuleLength:
+  Max: 180

@@ -1,6 +1,7 @@
 module DataBuilder
   module StandardGeneration
     attr_reader :parent
+    attr_reader :data_builder_data_hash
 
     def full_name
       Faker::Name.name
@@ -145,6 +146,41 @@ module DataBuilder
     alias db_user_name user_name
     alias db_url url
 
+    def randomize(value)
+      case value
+        when Array then value[rand(value.size)]
+        when Range then rand((value.last + 1) - value.first) + value.first
+        else value
+      end
+    end
+
+    def sequential(value)
+      index = index_variable_for(value)
+      index = (index ? index + 1 : 0)
+      index = 0 if index == value.length
+      set_index_variable(value, index)
+      value[index]
+    end
+
+    def mask(value)
+      result = ''
+
+      value.each_char do |ch|
+        result += case ch
+                    when '#' then randomize(0..9).to_s
+                    when 'A' then ('A'..'Z').to_a[rand(26)]
+                    when 'a' then ('a'..'z').to_a[rand(26)]
+                    else ch
+                  end
+      end
+
+      result
+    end
+
+    alias db_randomize randomize
+    alias db_sequential sequential
+    alias db_mask mask
+
     private
 
     def process(value)
@@ -157,6 +193,30 @@ module DataBuilder
       index = phone.index('x')
       phone = phone[0, (index - 1)] if index
       phone
+    end
+
+    def set_index_variable(ary, value)
+      index_hash[index_name(ary)] = value
+    end
+
+    def index_variable_for(ary)
+      value = index_hash[index_name(ary)]
+      index_hash[index_name(ary)] = -1 unless value
+      index_hash[index_name(ary)]
+    end
+
+    def index_hash
+      dh = data_hash[parent]
+      data_hash[parent] = {} unless dh
+      data_hash[parent]
+    end
+
+    def index_name(ary)
+      "#{ary[0]}#{ary[1]}_index".gsub(' ', '_').downcase
+    end
+
+    def data_hash
+      data_builder_data_hash || {}
     end
   end
 end
