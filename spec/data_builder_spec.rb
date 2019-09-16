@@ -26,6 +26,11 @@ RSpec.describe DataBuilder do
     expect(DataBuilder::VERSION).not_to be nil
   end
 
+  it "will accept and use a locale" do
+    expect(Faker::Config).to receive(:locale=).with('test-us')
+    DataBuilder.locale = 'test-us'
+  end
+
   context "when configuring the data path" do
     before(:each) do
       DataBuilder.data_path = nil

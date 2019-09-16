@@ -60,3 +60,6 @@ Metrics/MethodLength:
 # Encourage fewer parameters.
 Metrics/ParameterLists:
   Max: 4
+
+Metrics/AbcSize:
+  Max: 18

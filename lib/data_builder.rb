@@ -1,9 +1,19 @@
+require "data_builder/core_ext/hash"
+require "data_builder/core_ext/integer"
 require "data_builder/version"
+require "data_builder/generation"
+require "data_builder/generation_date"
+require "data_builder/generation_standard"
 
 require "data_reader"
+require "faker"
 
 module DataBuilder
   extend DataReader
+  extend DateGeneration
+  extend StandardGeneration
+
+  attr_reader :parent
 
   class << self
     attr_accessor :data_source
@@ -20,6 +30,14 @@ module DataBuilder
     end
 
     alias data_for_scenario data_files_for
+
+    if I18n.respond_to? :enforce_available_locales
+      I18n.enforce_available_locales = false
+    end
+
+    def locale=(value)
+      Faker::Config.locale = value
+    end
   end
 
   def data_about(key, specified = {})
@@ -34,7 +52,10 @@ module DataBuilder
     data = DataBuilder.data_source[record]
     raise ArgumentError, "Undefined key for data: #{key}" unless data
 
-    data.merge(specified).clone
+    # data.merge(specified).clone
+    # rubocop:disable Metrics/LineLength
+    process_data(data.merge(specified.key?(record) ? specified[record] : specified).deep_copy)
+    # rubocop:enable Metrics/LineLength
   end
 
   alias data_from data_about
@@ -51,6 +72,28 @@ module DataBuilder
   end
 
   private
+
+  def process_data(data)
+    case data
+      when Hash
+        data.each { |key, value| data[key] = process_data(value) }
+      when Array
+        data.each_with_index { |value, i| data[i] = process_data(value) }
+      when String
+        return generate(data[1..-1]) if data[0, 1] == "~"
+    end
+    data
+  end
+
+  def generate(value)
+    generation.send :process, value
+  rescue StandardError => e
+    fail "Failed to generate: #{value}\n Reason: #{e.message}\n"
+  end
+
+  def generation
+    @generation ||= Generation.new parent
+  end
 
   def builder_source
     ENV['DATA_BUILDER_SOURCE'] || 'default.yml'
