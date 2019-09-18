@@ -1,7 +1,6 @@
 module DataBuilder
   module StandardGeneration
     attr_reader :parent
-    attr_reader :data_builder_data_hash
 
     def full_name
       Faker::Name.name
@@ -154,7 +153,7 @@ module DataBuilder
       end
     end
 
-    def sequential(value)
+    def sequence(value)
       index = index_variable_for(value)
       index = (index ? index + 1 : 0)
       index = 0 if index == value.length
@@ -178,7 +177,7 @@ module DataBuilder
     end
 
     alias db_randomize randomize
-    alias db_sequential sequential
+    alias db_sequence sequence
     alias db_mask mask
 
     private
@@ -216,7 +215,9 @@ module DataBuilder
     end
 
     def data_hash
-      data_builder_data_hash || {}
+      # rubocop:disable Style/GlobalVars
+      $data_builder_data_hash ||= {}
+      # rubocop:enable Style/GlobalVars
     end
   end
 end

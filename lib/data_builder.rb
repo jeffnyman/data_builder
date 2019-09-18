@@ -1,5 +1,6 @@
 require "data_builder/core_ext/hash"
 require "data_builder/core_ext/integer"
+require "data_builder/core_ext/string"
 require "data_builder/version"
 require "data_builder/generation"
 require "data_builder/generation_date"
@@ -14,6 +15,10 @@ module DataBuilder
   extend StandardGeneration
 
   attr_reader :parent
+
+  if I18n.respond_to? :enforce_available_locales
+    I18n.enforce_available_locales = false
+  end
 
   def self.included(caller)
     @parent = caller
@@ -37,10 +42,6 @@ module DataBuilder
     end
 
     alias data_for_scenario data_files_for
-
-    if I18n.respond_to? :enforce_available_locales
-      I18n.enforce_available_locales = false
-    end
 
     def locale=(value)
       Faker::Config.locale = value
