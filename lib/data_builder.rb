@@ -15,6 +15,13 @@ module DataBuilder
 
   attr_reader :parent
 
+  def self.included(caller)
+    @parent = caller
+    generators.each do |generator|
+      Generation.send :include, generator
+    end
+  end
+
   class << self
     attr_accessor :data_source
 
@@ -38,6 +45,10 @@ module DataBuilder
     def locale=(value)
       Faker::Config.locale = value
     end
+
+    def generators
+      @generators || []
+    end
   end
 
   def data_about(key, specified = {})
@@ -52,7 +63,6 @@ module DataBuilder
     data = DataBuilder.data_source[record]
     raise ArgumentError, "Undefined key for data: #{key}" unless data
 
-    # data.merge(specified).clone
     # rubocop:disable Metrics/LineLength
     process_data(data.merge(specified.key?(record) ? specified[record] : specified).deep_copy)
     # rubocop:enable Metrics/LineLength
