@@ -28,7 +28,7 @@ module DataBuilder
   end
 
   class << self
-    attr_accessor :data_source
+    attr_accessor :data_contents
 
     def default_data_path
       'data'
@@ -58,10 +58,10 @@ module DataBuilder
       DataBuilder.load("#{file}.yml")
     else
       record = key.to_s
-      DataBuilder.load(builder_source) unless DataBuilder.data_source
+      DataBuilder.load(builder_source) unless DataBuilder.data_contents
     end
 
-    data = DataBuilder.data_source[record]
+    data = DataBuilder.data_contents[record]
     raise ArgumentError, "Undefined key for data: #{key}" unless data
 
     # rubocop:disable Metrics/LineLength

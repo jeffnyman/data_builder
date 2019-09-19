@@ -5,13 +5,13 @@ RSpec.describe "DataBuilder Generators" do
     let(:example) { (Class.new { include DataBuilder }).new }
 
     def set_field_value(value)
-      expect(DataBuilder).to receive(:data_source).twice.and_return({'key' => {'field' => value}})
+      expect(DataBuilder).to receive(:data_contents).twice.and_return({'key' => {'field' => value}})
     end
 
     it "will deep copy the data returned so that it can be reused" do
       yaml = double("yaml")
       expect(yaml).to receive(:merge).and_return(yaml)
-      expect(DataBuilder).to receive(:data_source).twice.and_return(yaml)
+      expect(DataBuilder).to receive(:data_contents).twice.and_return(yaml)
       expect(yaml).to receive(:[]).and_return(yaml)
       expect(yaml).to receive(:deep_copy).and_return({'field' => 'value'})
       expect(example.data_for('key')).to have_field_value "value"
@@ -19,7 +19,7 @@ RSpec.describe "DataBuilder Generators" do
 
     it "will merge provided data with the data source data" do
       yaml = double("yaml")
-      expect(DataBuilder).to receive(:data_source).twice.and_return(yaml)
+      expect(DataBuilder).to receive(:data_contents).twice.and_return(yaml)
       expect(yaml).to receive(:[]).and_return(yaml)
       expect(yaml).to receive(:merge).and_return(yaml)
       expect(yaml).to receive(:deep_copy).and_return({'field' => 'value'})

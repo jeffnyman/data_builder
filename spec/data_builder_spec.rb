@@ -57,14 +57,14 @@ RSpec.describe DataBuilder do
 
     it "defaults to reading a file named default.yml" do
       DataBuilder.data_path = 'data'
-      DataBuilder.data_source = nil
+      DataBuilder.data_contents = nil
       data = TestPage.new.data_about :test
       expect(data.keys).to include "data_01"
     end
 
     it "recognizes data builder environment variable" do
       DataBuilder.data_path = 'data'
-      DataBuilder.data_source = nil
+      DataBuilder.data_contents = nil
       ENV['DATA_BUILDER_SOURCE'] = 'account.yml'
       data = TestPage.new.data_about "test"
       expect(data.keys.sort).to eq(['name','owner'])
