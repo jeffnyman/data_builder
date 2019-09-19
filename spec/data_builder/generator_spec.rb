@@ -1,5 +1,3 @@
-require "spec_helper"
-
 RSpec.describe "DataBuilder Generators" do
   context "when delivering data" do
     let(:example) { (Class.new { include DataBuilder }).new }
@@ -286,6 +284,55 @@ RSpec.describe "DataBuilder Generators" do
         set_field_value "~5.days_ago"
         the_date = Date.today - 5
         expect(example.data_for('key')).to have_field_value the_date.strftime('%D')
+      end
+
+      it "will generate a month" do
+        months = %w[January February March April May June July August September October November December]
+        set_field_value "~month"
+        expect(months).to include(example.data_for('key')['field'])
+      end
+
+      it "will generate a month abbreviation" do
+        months = %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec]
+        set_field_value "~month_abbr"
+        expect(months).to include(example.data_for('key')['field'])
+      end
+
+      it "will generate a day of the week" do
+        days = %w[Sunday Monday Tuesday Wednesday Thursday Friday Saturday]
+        set_field_value "~day_of_week"
+        expect(days).to include(example.data_for('key')['field'])
+      end
+
+      it "will generate a day of the week abbreviation" do
+        days = %w[Sun Mon Tue Wed Thu Fri Sat]
+        set_field_value "~day_of_week_abbr"
+        expect(days).to include(example.data_for('key')['field'])
+      end
+    end
+
+    context "sequential data" do
+      it "will generate data from a sequence" do
+        ordered = ['first', 'second', 'third']
+        set_field_value "~sequence ['first', 'second', 'third']"
+        expect(ordered).to include(example.data_for('key')['field'])
+      end
+    end
+
+    context "randomize" do
+      it "will not randomize a single value" do
+        set_field_value "~randomize 1"
+        expect(example.data_for('key')).to have_field_value 1
+      end
+    end
+
+    context "masked data" do
+      it "will generate data from a mask" do
+        set_field_value "~mask '###-AAA_aaa'"
+        data = example.data_for('key')['field']
+        expect(data[0, 3].integer?).to be true
+        expect(data[4, 3].upcase).to eql data[4, 3]
+        expect(data[-1 * 3, 3].downcase).to eql data[-3, 3]
       end
     end
 

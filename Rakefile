@@ -10,6 +10,7 @@ namespace :spec do
   desc 'Clean all generated reports'
   task :clean do
     system('rm -rf spec/reports')
+    system('rm -rf spec/coverage')
   end
 
   RSpec::Core::RakeTask.new(all: :clean) do |config|
