@@ -16,7 +16,7 @@ gem 'data_builder'
 To get the latest code:
 
 ```ruby
-gem 'data_reader', git: 'https://github.com/jeffnyman/data_builder'
+gem 'data_builder', git: 'https://github.com/jeffnyman/data_builder'
 ```
 
 After doing one of the above, execute the following command:
